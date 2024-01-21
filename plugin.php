@@ -196,35 +196,13 @@ class Ag_Theme_Builder_Main {
 	 */
 	public function enqueue_scripts() {
 
-		$all_modules    = Ag_Elementor_Module_List::instance()->get_list();
-		$active_modules = Ag_Elementor_Dashboard::instance()->utils->get_option( 'ag_elementor_module_list', array_keys( $all_modules ) );
-
+	
 		wp_enqueue_style( 'ag-theme-builder', AG_THEME_BUILDER_URL . 'assets/css/ag-theme-builder.css', null, AG_THEME_BUILDER_VER );
 		wp_enqueue_script( 'ag-theme-builder', AG_THEME_BUILDER_URL . 'assets/js/ag-theme-builder.js', array( 'jquery' ), AG_THEME_BUILDER_VER, true );
 
 		wp_script_add_data( 'ag-theme-builder', 'async', true );
 
-		//Frontend Panel
-		if ( is_user_logged_in() && current_user_can( 'edit_posts' ) && is_array( $active_modules ) && in_array( 'theme-builder', $active_modules, true ) && ! ( self::$elementor_instance && \Elementor\Plugin::$instance->preview->is_preview_mode() ) ) {
-
-			global $user_ID;
-
-			wp_enqueue_style( 'ag-theme-builder-frontend', AG_THEME_BUILDER_URL . 'admin/assets/css/ag-frontend.css', array(), AG_THEME_BUILDER_VER );
-			wp_enqueue_script( 'ag-theme-builder-frontend', AG_THEME_BUILDER_URL . 'admin/assets/js/ag-frontend.js', array(), AG_THEME_BUILDER_VER, true );
-			wp_enqueue_script( 'ag-theme-builder-frontend-chunk', AG_THEME_BUILDER_URL . 'admin/assets/js/ag-chunk.js', array(), AG_THEME_BUILDER_VER, true );
-			wp_enqueue_script( 'ag-theme-builder-frontend-main', AG_THEME_BUILDER_URL . 'admin/assets/js/ag-main.js', array(), AG_THEME_BUILDER_VER, true );
-			wp_localize_script(
-				'ag-theme-builder-frontend',
-				'AgThemeBuilderApi',
-				array(
-					'ApiUrl'   => get_rest_url(),
-					'siteUrl'  => get_site_url(),
-					'adminUrl' => get_admin_url(),
-					'user'     => $user_ID,
-					'nonce'    => wp_create_nonce( 'wp_rest' ),
-				)
-			);
-		}
+	
 
 		if ( class_exists( '\Elementor\Plugin' ) ) {
 			$elementor = \Elementor\Plugin::instance();
